@@ -601,7 +601,7 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
 	dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
 	if (dev->current_state != state && printk_ratelimit())
 		dev_dbg(&dev->dev, "Refused to change power state, currently in D%d\n",
-			dev->current_state);
+			 dev->current_state);
 
 	/*
 	 * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
