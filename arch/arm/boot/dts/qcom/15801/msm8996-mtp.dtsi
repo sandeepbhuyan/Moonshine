@@ -2182,3 +2182,8 @@
 &pmi8994_switch {
 	qcom,current = <507>;
 };
+//msm8996-coresight-v3.dtsi end
+
+&msm_gpu {
+	qcom,l2pc-cpu-mask = <0x0000000C>;
+};
