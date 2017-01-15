@@ -1117,7 +1117,7 @@ int mdss_dsi_reg_status_check(struct mdss_dsi_ctrl_pdata *ctrl_pdata)
 		return 0;
 	}
 
-	pr_debug("%s: Checking Register status\n", __func__);
+	pr_err("%s: Checking Register status\n", __func__);
 
 	mdss_dsi_clk_ctrl(ctrl_pdata, ctrl_pdata->dsi_clk_handle,
 			  MDSS_DSI_ALL_CLKS, MDSS_DSI_CLK_ON);
@@ -1125,6 +1125,7 @@ int mdss_dsi_reg_status_check(struct mdss_dsi_ctrl_pdata *ctrl_pdata)
 	sctrl_pdata = mdss_dsi_get_other_ctrl(ctrl_pdata);
 	if (!mdss_dsi_sync_wait_enable(ctrl_pdata)) {
 		ret = mdss_dsi_read_status(ctrl_pdata);
+		pr_err("%x\n",ctrl_pdata->status_buf.data[0]);
 	} else {
 		/*
 		 * Read commands to check ESD status are usually sent at
@@ -2451,6 +2452,9 @@ int mdss_dsi_cmdlist_commit(struct mdss_dsi_ctrl_pdata *ctrl, int from_mdp)
 	bool hs_req = false;
 	bool cmd_mutex_acquired = false;
 
+	if (mdss_get_sd_client_cnt())
+		return -EPERM;
+
 	if (from_mdp) {	/* from mdp kickoff */
 		if (!ctrl->burst_mode_enabled) {
 			mutex_lock(&ctrl->cmd_mutex);
@@ -2476,21 +2480,6 @@ int mdss_dsi_cmdlist_commit(struct mdss_dsi_ctrl_pdata *ctrl, int from_mdp)
 	if ((!ctrl->burst_mode_enabled) || from_mdp) {
 		/* make sure dsi_cmd_mdp is idle */
 		mdss_dsi_cmd_mdp_busy(ctrl);
-	}
-
-	/*
-	 * if secure display session is enabled
-	 * and DSI controller version is above 1.3.0,
-	 * then send DSI commands using TPG FIFO.
-	 */
-	if (mdss_get_sd_client_cnt() && req) {
-		if (ctrl->shared_data->hw_rev >= MDSS_DSI_HW_REV_103) {
-			req->flags |= CMD_REQ_DMA_TPG;
-		} else {
-			if (cmd_mutex_acquired)
-				mutex_unlock(&ctrl->cmd_mutex);
-			return -EPERM;
-		}
 	}
 
 	/* For DSI versions less than 1.3.0, CMD DMA TPG is not supported */
@@ -2570,10 +2559,10 @@ int mdss_dsi_cmdlist_commit(struct mdss_dsi_ctrl_pdata *ctrl, int from_mdp)
 			ctrl->mdss_util->iommu_ctrl(0);
 
 		(void)mdss_dsi_bus_bandwidth_vote(ctrl->shared_data, false);
+		mdss_dsi_clk_ctrl(ctrl, ctrl->dsi_clk_handle, MDSS_DSI_ALL_CLKS,
+			  MDSS_DSI_CLK_OFF);
 	}
 
-	mdss_dsi_clk_ctrl(ctrl, ctrl->dsi_clk_handle, MDSS_DSI_ALL_CLKS,
-			MDSS_DSI_CLK_OFF);
 need_lock:
 
 	MDSS_XLOG(ctrl->ndx, from_mdp, ctrl->mdp_busy, current->pid,
@@ -2699,7 +2688,6 @@ static int dsi_event_thread(void *data)
 		if (todo & DSI_EV_DSI_FIFO_EMPTY) {
 			__dsi_fifo_error_handler(ctrl, false);
 		}
-
 		if (todo & DSI_EV_DLNx_FIFO_OVERFLOW) {
 			mutex_lock(&dsi_mtx);
 			/*
