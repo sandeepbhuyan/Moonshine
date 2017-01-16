@@ -715,3 +715,4 @@ config LGE_ADAPTIVE_READAHEAD
 	help
 	  Enable LGE adaptive readhead.
 
+source "arch/arm64/mm/Kconfig"
