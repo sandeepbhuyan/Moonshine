@@ -35,6 +35,7 @@
 modules.builtin
 Module.symvers
 *.dwo
+*.old
 
 #
 # Top-level generic files
@@ -82,6 +83,11 @@ GRTAGS
 GSYMS
 GTAGS
 
+*.rej
+*.diff
+*.patch
+*.list
+out/*
 *.orig
 *~
 \#*#
