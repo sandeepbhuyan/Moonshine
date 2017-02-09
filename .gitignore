@@ -36,6 +36,7 @@ modules.builtin
 Module.symvers
 *.dwo
 *.old
+ipa_common
 
 #
 # Top-level generic files
