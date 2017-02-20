@@ -20,7 +20,7 @@ OUTPUT_DIR="${HOME}/Kernel/Moonshine/arch/arm64/boot"
 export LOCALVERSION=-`echo $MS_VER`
 export ARCH=arm64
 export SUBARCH=arm64
-export CROSS_COMPILE=../Toolchain/BloodTC/bin/aarch64-linux-android-
+export CROSS_COMPILE=../Toolchain/Linaro/bin/aarch64-linux-gnu-
 
 function clean_all {
 		rm -rf $REPACK_DIR/zImage
