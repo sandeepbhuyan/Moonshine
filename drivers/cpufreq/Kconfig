@@ -158,7 +158,7 @@ config CPU_FREQ_DEFAULT_GOV_BLU_ACTIVE
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
-	tristate "'performance' governor"
+	tristate "'performance' cpufreq policy governor"
 	help
 	  This cpufreq governor sets the frequency statically to the
 	  highest available CPU frequency.
@@ -169,7 +169,7 @@ config CPU_FREQ_GOV_PERFORMANCE
 	  If in doubt, say Y.
 
 config CPU_FREQ_GOV_POWERSAVE
-	tristate "'powersave' governor"
+	tristate "'powersave' cpufreq policy governor"
 	help
 	  This cpufreq governor sets the frequency statically to the
 	  lowest available CPU frequency.
@@ -180,7 +180,7 @@ config CPU_FREQ_GOV_POWERSAVE
 	  If in doubt, say Y.
 
 config CPU_FREQ_GOV_USERSPACE
-	tristate "'userspace' governor for userspace frequency scaling"
+	tristate "'userspace' cpufreq policy governor"
 	help
 	  Enable this cpufreq governor when you either want to set the
 	  CPU frequency manually or when a userspace program shall
@@ -230,7 +230,7 @@ config CPU_FREQ_GOV_INTERACTIVE
 	  If in doubt, say N.
 
 config CPU_FREQ_GOV_CHILL
-	tristate "'chill' cpufreq governor"
+	tristate "'chill' cpufreq policy governor"
 	depends on CPU_FREQ
 	select CPU_FREQ_GOV_COMMON
 	default y
@@ -239,7 +239,7 @@ config CPU_FREQ_GOV_CHILL
 	  that go into suspended or display off states often.
 
 config CPU_FREQ_GOV_RELAXED
-	tristate "'relaxed' cpufreq governor"
+	tristate "'relaxed' cpufreq policy governor"
 	depends on CPU_FREQ
 	select CPU_FREQ_GOV_COMMON
 	default y
