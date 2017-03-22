@@ -1357,6 +1357,11 @@ static void fg_enable_irqs(struct fg_chip *chip, bool enable)
 	if (enable) {
 		enable_irq(chip->soc_irq[DELTA_SOC].irq);
 		enable_irq_wake(chip->soc_irq[DELTA_SOC].irq);
+		if (!chip->full_soc_irq_enabled) {
+			enable_irq(chip->soc_irq[FULL_SOC].irq);
+			enable_irq_wake(chip->soc_irq[FULL_SOC].irq);
+			chip->full_soc_irq_enabled = true;
+		}
 		enable_irq(chip->batt_irq[BATT_MISSING].irq);
 		if (!chip->full_soc_irq_enabled) {
 			enable_irq(chip->soc_irq[FULL_SOC].irq);
@@ -1376,6 +1381,11 @@ static void fg_enable_irqs(struct fg_chip *chip, bool enable)
 	} else {
 		disable_irq_wake(chip->soc_irq[DELTA_SOC].irq);
 		disable_irq_nosync(chip->soc_irq[DELTA_SOC].irq);
+		if (chip->full_soc_irq_enabled) {
+			disable_irq_wake(chip->soc_irq[FULL_SOC].irq);
+			disable_irq_nosync(chip->soc_irq[FULL_SOC].irq);
+			chip->full_soc_irq_enabled = false;
+		}
 		disable_irq(chip->batt_irq[BATT_MISSING].irq);
 		if (chip->full_soc_irq_enabled) {
 			disable_irq_wake(chip->soc_irq[FULL_SOC].irq);
