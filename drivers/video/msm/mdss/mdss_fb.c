@@ -3474,8 +3474,8 @@ int mdss_fb_atomic_commit(struct fb_info *info,
 			if (mfd->panel.type == WRITEBACK_PANEL) {
 				output_layer = commit_v1->output_layer;
 				if (!output_layer) {
-					pr_err("Output layer is null\n");
-					goto end;
+					pr_err("Output layer is null, ret: %d\n", ret);
+					return ret;
 				}
 				wb_change = !mdss_fb_is_wb_config_same(mfd,
 						commit_v1->output_layer);
