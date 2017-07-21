@@ -35,6 +35,8 @@
 modules.builtin
 Module.symvers
 *.dwo
+*.old
+ipa_common
 
 #
 # Top-level generic files
@@ -96,5 +98,3 @@ x509.genkey
 
 # Kconfig presets
 all.config
-
-build.sh
